@@ -1,0 +1,60 @@
+#!/bin/bash
+## BEGIN INIT INFO
+# Provides: xguest
+# Default-Start: 5
+# Default-Stop: 0 1 2 3 4 6
+# Required-Start:
+#              
+## END INIT INFO
+# xguest:        Set up / mountpoint to be shared, /var/tmp, /tmp, /home/xguest unshared
+#
+# chkconfig: 5 1 99
+#
+# Description: xguest is using pam_namespace to share the /var/tmp, /tmp and 
+#              /home/xguest accounts.  This script will setup the / mount 
+#              point as shared and all of the subdirectories just these 
+#              directories as unshared.
+#
+
+# Source function library.
+. /etc/init.d/functions
+
+LOCKFILE=/var/lock/subsys/xguest
+
+base=${0##*/}
+
+case "$1" in
+    start)
+	[ -f "$LOCKFILE" ] && exit 0
+
+	touch $LOCKFILE
+	mount --make-rshared /
+	mount --bind /tmp /tmp
+	mount --bind /var/tmp /var/tmp
+	mount --bind /home/xguest /home/xguest
+	mount --make-private /home/xguest
+	mount --make-private /tmp
+	mount --make-private /var/tmp
+	RETVAL=$?
+	exit $RETVAL
+	;;
+
+    status)
+	if [ -f "$LOCKFILE" ]; then 
+	    echo "$base is running"
+	else
+	    echo "$base is stopped"
+	fi
+	exit 0
+	;;
+
+    stop)
+	rm -f $LOCKFILE
+	exit 0
+	;;
+
+    *)
+	echo $"Usage: $0 {start|stop}"
+	exit 3
+	;;
+esac
