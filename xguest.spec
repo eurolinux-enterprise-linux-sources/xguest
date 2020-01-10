@@ -1,17 +1,16 @@
 Summary: Creates xguest user as a locked down user 
 Name: xguest
-Version: 1.0.8
-Release: 6%{?dist}
+Version: 1.0.9
+Release: 1%{?dist}.1
 License: GPLv2+
 Group: System Environment/Base
 BuildArch: noarch
 Source: http://people.fedoraproject.org/~dwalsh/xguest/%{name}-%{version}.tar.bz2
-patch: xguest-namespace.patch
 URL: http://people.fedoraproject.org/~dwalsh/xguest/
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-Requires(post): pam >= 0.99.8.1-17 selinux-policy > 3.6.3-12 selinux-policy-base
-Requires(post): policycoreutils-sandbox
+Requires(pre): pam >= 0.99.8.1-17 selinux-policy > 3.6.3-12 selinux-policy-base
+Requires(pre): policycoreutils-sandbox
 Requires(post): sabayon-apply
 Requires: gdm >= 1:2.20.0-15.fc8
 
@@ -24,7 +23,6 @@ mounted on tmpfs.
 
 %prep
 %setup -q
-%patch -p1 -b .namespace
 
 %build
 
@@ -33,23 +31,29 @@ mounted on tmpfs.
 
 %install
 %{__rm} -fR %{buildroot}
-%{__mkdir} -p %{buildroot}/%{_sysconfdir}/sabayon
+%{__mkdir} -p %{buildroot}/%{_sysconfdir}/sabayon/profiles
 %{__mkdir} -p %{buildroot}/%{_sysconfdir}/security/namespace.d/ls
-install -m0644 xguest.zip %{buildroot}/%{_sysconfdir}/sabayon/
+install -m0644 xguest.zip %{buildroot}/%{_sysconfdir}/sabayon/profiles/
 install -m0644 xguest.conf %{buildroot}/%{_sysconfdir}/security/namespace.d/
+
+%pre
+if [ $1 -eq 1 ]; then
+semanage user -a  -S targeted -P xguest -R xguest_r xguest_u  2> /dev/null  || :
+(useradd -c "Guest" -Z xguest_u xguest || semanage login -a -S targeted -s xguest_u xguest || semanage login -m -S targeted -s xguest_u xguest) 2>/dev/null || exit 1
+
+echo "xguest:exclusive" >> /etc/security/sepermit.conf
+
+semanage  boolean -m -S targeted -F /dev/stdin  << _EOF
+allow_polyinstantiation=1
+xguest_connect_network=1
+xguest_mount_media=1
+xguest_use_bluetooth=1
+_EOF
+
+fi
 
 %post
 if [ $1 -eq 1 ]; then
-useradd -c "kiosk" xguest 2> /dev/null | :
-echo "xguest:exclusive" >> /etc/security/sepermit.conf
-
-semanage -S targeted -i - << _EOF
-login -a -s xguest_u xguest 
-boolean -m --on allow_polyinstantiation
-boolean -m --on xguest_connect_network
-boolean -m --on xguest_mount_media
-boolean -m --on xguest_use_bluetooth
-_EOF
 
 # Add two directories to /etc/skell so pam_namespace will label properly
 mkdir /etc/skel/.mozilla 2> /dev/null
@@ -65,7 +69,7 @@ fi
 
 %files
 %defattr(-,root,root)
-%config(noreplace) %{_sysconfdir}/sabayon/xguest.zip
+%config(noreplace) %{_sysconfdir}/sabayon/profiles/xguest.zip
 %{_sysconfdir}/security/namespace.d/
 %doc README LICENSE
 
@@ -82,15 +86,12 @@ __eof
 fi
 
 %changelog
-* Wed Apr 28 2010 Dan Walsh <dwalsh@redhat.com> - 1.0.8-6
-- Fix build to work on disabled machine
-Resolves: #507609
+* Wed Oct 13 2010 Dan Walsh <dwalsh@redhat.com> - 1.0.9-1
+- Fix placement of xguest.zip file
+Resolves: #641811
 
-* Wed Mar 10 2010 Dan Walsh <dwalsh@redhat.com> - 1.0.8-5
-- Use /proc/self/fd/0 instead of /dev/stdin
-
-* Tue Mar 2 2010 Dan Walsh <dwalsh@redhat.com> - 1.0.8-4
-- Use /proc/self/0 instead of /dev/stdin
+* Tue Feb 9 2010 Dan Walsh <dwalsh@redhat.com> - 1.0.9-1
+- Fix placement of xguest.zip file
 
 * Tue Feb 9 2010 Dan Walsh <dwalsh@redhat.com> - 1.0.8-3
 - Fix sabayon remove
