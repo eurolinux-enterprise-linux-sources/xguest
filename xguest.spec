@@ -1,7 +1,7 @@
 Summary: Creates xguest user as a locked down user 
 Name: xguest
 Version: 1.0.9
-Release: 1%{?dist}.1
+Release: 2%{?dist}
 License: GPLv2+
 Group: System Environment/Base
 BuildArch: noarch
@@ -43,7 +43,7 @@ semanage user -a  -S targeted -P xguest -R xguest_r xguest_u  2> /dev/null  || :
 
 echo "xguest:exclusive" >> /etc/security/sepermit.conf
 
-semanage  boolean -m -S targeted -F /dev/stdin  << _EOF
+semanage  boolean -m -S targeted -F /proc/self/fd/0  << _EOF
 allow_polyinstantiation=1
 xguest_connect_network=1
 xguest_mount_media=1
@@ -86,12 +86,13 @@ __eof
 fi
 
 %changelog
-* Wed Oct 13 2010 Dan Walsh <dwalsh@redhat.com> - 1.0.9-1
-- Fix placement of xguest.zip file
-Resolves: #641811
+* Tue Jan 18 2011 Miroslav Grepl <mgrepl@redhat.com> - 1.0.9-2
+- Fix semanage  boolean line to use /proc/self/fd/0 instead of /dev/stdin
+Resolves: #667348
 
 * Tue Feb 9 2010 Dan Walsh <dwalsh@redhat.com> - 1.0.9-1
 - Fix placement of xguest.zip file
+Resolves: #639857
 
 * Tue Feb 9 2010 Dan Walsh <dwalsh@redhat.com> - 1.0.8-3
 - Fix sabayon remove
