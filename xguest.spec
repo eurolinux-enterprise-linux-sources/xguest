@@ -1,15 +1,16 @@
 Summary: Creates xguest user as a locked down user 
 Name: xguest
 Version: 1.0.9
-Release: 2%{?dist}
+Release: 5%{?dist}
 License: GPLv2+
 Group: System Environment/Base
 BuildArch: noarch
 Source: http://people.fedoraproject.org/~dwalsh/xguest/%{name}-%{version}.tar.bz2
+Patch1: xguest-README.patch
 URL: http://people.fedoraproject.org/~dwalsh/xguest/
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-Requires(pre): pam >= 0.99.8.1-17 selinux-policy > 3.6.3-12 selinux-policy-base
+Requires(pre): pam >= 0.99.8.1-17 selinux-policy-targeted > 3.6.3-12 
 Requires(pre): policycoreutils-sandbox
 Requires(post): sabayon-apply
 Requires: gdm >= 1:2.20.0-15.fc8
@@ -23,6 +24,7 @@ mounted on tmpfs.
 
 %prep
 %setup -q
+%patch1 -p1
 
 %build
 
@@ -86,6 +88,18 @@ __eof
 fi
 
 %changelog
+* Mon Mar 31 2014 Miroslav Grepl <mgrepl@redhat.com> - 1.0.9-5
+- Fix spec file
+Resolves:#1081413
+
+* Mon Mar 31 2014 Miroslav Grepl <mgrepl@redhat.com> - 1.0.9-4
+- Fix README to reflect xguest booleans
+Resolves:#1081413
+
+* Wed Mar 26 2014 Miroslav Grepl <mgrepl@redhat.com> - 1.0.9-3
+- Requires only selinux-policy-targeted pkg to not install selinux-policy-mls pkg
+Resolves:#877016
+
 * Tue Jan 18 2011 Miroslav Grepl <mgrepl@redhat.com> - 1.0.9-2
 - Fix semanage  boolean line to use /proc/self/fd/0 instead of /dev/stdin
 Resolves: #667348

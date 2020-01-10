@@ -1,0 +1,41 @@
+--- xguest-1.0.9/README.old	2014-03-31 10:30:06.598122527 +0200
++++ xguest-1.0.9/README	2014-03-31 10:33:07.041297936 +0200
+@@ -52,31 +52,20 @@
+ Switcher applet to your tool bar and select xguest.  You should switch to this
+ account and be automagically logged in.
+ 
+-There are three SELinux booleans that you can set for this account.
++There are four SELinux booleans that you can set for this account.
+ getsebool -a | grep xguest
+ 
+-    * browser_confine_xguest
++    * xguest_connect_network
+ 
++Allow xguest users to configure Network Manager and connect to apache ports.
+ 
+-    This indicates whether the xguest account will transition to 
+-xguest_mozilla_t or not.  If you turn this boolean on, xguest will be able to 
+-browse the web using firefox/mozilla.  If you turn it off the account will only
+-be allowed to run mozilla/firefox locally.  You will not have any access to the
+-network.
++    * xguest_mount_media
+ 
+-    * browser_write_xguest_data
++Allow xguest users to mount removable media.
+ 
++    * xguest_use_bluetooth
+ 
+-This will determine whether firefox can write to the home directory or not.
+-
+-If this boolean is turned off firefox will only be allowed to write to 
+-.mozilla and .gnome in the home directory.
+-
+-If you wanted to add a download directory you could add a file context and 
+-label it xguest_mozilla_home_t
+-
+-# semanage fcontext -a -t xguest_mozilla_home_t /home/xguest/Download(/.*)?
+-# mkdir /etc/skel/Download
++Allow xguest to use bluetooth devices.
+ 
+     * allow_xguest_exec_content
+ 
