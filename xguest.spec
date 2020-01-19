@@ -1,7 +1,7 @@
 Summary: Creates xguest user as a locked down user 
 Name: xguest
 Version: 1.0.10
-Release: 31%{?dist}
+Release: 32%{?dist}
 License: GPLv2+
 Group: System Environment/Base
 BuildArch: noarch
@@ -67,6 +67,9 @@ head -1 /dev/urandom | passwd xguest --stdin >/dev/null
 exit 0
 
 %changelog
+* Fri Dec 27 2013 Daniel Mach <dmach@redhat.com> - 1.0.10-32
+- Mass rebuild 2013-12-27
+
 * Mon Sep 2 2013 Dan Walsh <dwalsh@redhat.com> - 1.0.10-32
 - remove excess noice from post install scripts
 
