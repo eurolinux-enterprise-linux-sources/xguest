@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<metadata>
+  <directories>
+    <directory path=".config" timestamp="1233869169" user="sabayon" host="localhost.localdomain">
+      <source>Files</source>
+      <attributes>
+        <attribute name="mandatory" value="False"/>
+      </attributes>
+    </directory>
+    <directory path=".config/autostart" timestamp="1233869169" user="sabayon" host="localhost.localdomain">
+      <source>Files</source>
+      <attributes>
+        <attribute name="mandatory" value="False"/>
+      </attributes>
+    </directory>
+  </directories>
+  <files>
+    <file path=".config/autostart/kerneloops-applet.desktop" timestamp="1233869169" user="sabayon" host="localhost.localdomain">
+      <source>Files</source>
+      <attributes>
+        <attribute name="mandatory" value="False"/>
+      </attributes>
+    </file>
+    <file path=".config/autostart/gpk-update-icon.desktop" timestamp="1233869169" user="sabayon" host="localhost.localdomain">
+      <source>Files</source>
+      <attributes>
+        <attribute name="mandatory" value="False"/>
+      </attributes>
+    </file>
+    <file path=".config/autostart/sealertauto.desktop" timestamp="1233869169" user="sabayon" host="localhost.localdomain">
+      <source>Files</source>
+      <attributes>
+        <attribute name="mandatory" value="False"/>
+      </attributes>
+    </file>
+    <file path=".config/autostart/gnome-power-manager.desktop" timestamp="1233869169" user="sabayon" host="localhost.localdomain">
+      <source>Files</source>
+      <attributes>
+        <attribute name="mandatory" value="False"/>
+      </attributes>
+    </file>
+    <file path=".config/autostart/vino-server.desktop" timestamp="1233869169" user="sabayon" host="localhost.localdomain">
+      <source>Files</source>
+      <attributes>
+        <attribute name="mandatory" value="False"/>
+      </attributes>
+    </file>
+  </files>
+</metadata>
